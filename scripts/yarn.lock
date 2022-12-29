@@ -62,6 +62,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@solana/buffer-layout-utils@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@solana/buffer-layout-utils@npm:0.2.0"
+  dependencies:
+    "@solana/buffer-layout": ^4.0.0
+    "@solana/web3.js": ^1.32.0
+    bigint-buffer: ^1.1.5
+    bignumber.js: ^9.0.1
+  checksum: 9284242245b18b49577195ba7548263850be865a4a2d183944fa01bb76382039db589aab8473698e9bb734b515ada9b4d70db0a72e341c5d567c59b83d6d0840
+  languageName: node
+  linkType: hard
+
 "@solana/buffer-layout@npm:^4.0.0":
   version: 4.0.1
   resolution: "@solana/buffer-layout@npm:4.0.1"
@@ -71,7 +83,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solana/web3.js@npm:^1.72.0":
+"@solana/spl-token@npm:^0.3.6":
+  version: 0.3.6
+  resolution: "@solana/spl-token@npm:0.3.6"
+  dependencies:
+    "@solana/buffer-layout": ^4.0.0
+    "@solana/buffer-layout-utils": ^0.2.0
+    buffer: ^6.0.3
+  peerDependencies:
+    "@solana/web3.js": ^1.47.4
+  checksum: e213db12ff6e443d07033898457854c5659189a00fc58f7cfd1b27229fdafd26edb7f1dcdcd21f76e703a8932b465cd6f418268c04f1b00996802f9894c280e7
+  languageName: node
+  linkType: hard
+
+"@solana/web3.js@npm:^1.32.0, @solana/web3.js@npm:^1.72.0":
   version: 1.72.0
   resolution: "@solana/web3.js@npm:1.72.0"
   dependencies:
@@ -138,6 +163,15 @@ __metadata:
   version: 9.1.1
   resolution: "@types/mocha@npm:9.1.1"
   checksum: 516077c0acd9806dc78317f88aaac0df5aaf0bdc2f63dfdadeabdf0b0137953b6ca65472e6ff7c30bc93ce4e0ae76eae70e8d46764b9a8eae4877a928b6ef49a
+  languageName: node
+  linkType: hard
+
+"@types/mz@npm:^2.7.2":
+  version: 2.7.4
+  resolution: "@types/mz@npm:2.7.4"
+  dependencies:
+    "@types/node": "*"
+  checksum: ecae14f69d8681177756ce8830002284a8aa7a904c53a76a5d194822d14a09a065d901515bb2f86a50d4edc91c0a831c0cc070da0acde1cb111b7b18be8fadee
   languageName: node
   linkType: hard
 
@@ -243,6 +277,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"any-promise@npm:^1.0.0":
+  version: 1.3.0
+  resolution: "any-promise@npm:1.3.0"
+  checksum: 0ee8a9bdbe882c90464d75d1f55cf027f5458650c4bd1f0467e65aec38ccccda07ca5844969ee77ed46d04e7dded3eaceb027e8d32f385688523fe305fa7e1de
+  languageName: node
+  linkType: hard
+
 "anymatch@npm:~3.1.2":
   version: 3.1.3
   resolution: "anymatch@npm:3.1.3"
@@ -321,6 +362,13 @@ __metadata:
     bindings: ^1.3.0
     node-gyp: latest
   checksum: d010c9f57758bcdaccb435d88b483ffcc95fe8bbc6e7fb3a44fb5221f29c894ffaf4a3c5a4a530e0e7d6608203c2cde9b79ee4f2386cd6d4462d1070bc8c9f4e
+  languageName: node
+  linkType: hard
+
+"bignumber.js@npm:^9.0.1":
+  version: 9.1.1
+  resolution: "bignumber.js@npm:9.1.1"
+  checksum: ad243b7e2f9120b112d670bb3d674128f0bd2ca1745b0a6c9df0433bd2c0252c43e6315d944c2ac07b4c639e7496b425e46842773cf89c6a2dcd4f31e5c4b11e
   languageName: node
   linkType: hard
 
@@ -409,6 +457,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"buffer-layout@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "buffer-layout@npm:1.2.2"
+  checksum: e5809ba275530bf4e52fd09558b7c2111fbda5b405124f581acf364261d9c154e271800271898cd40473f9bcbb42c31584efb04219bde549d3460ca4bafeaa07
+  languageName: node
+  linkType: hard
+
 "buffer@npm:6.0.1":
   version: 6.0.1
   resolution: "buffer@npm:6.0.1"
@@ -419,7 +474,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer@npm:~6.0.3":
+"buffer@npm:^6.0.3, buffer@npm:~6.0.3":
   version: 6.0.3
   resolution: "buffer@npm:6.0.3"
   dependencies:
@@ -798,6 +853,13 @@ __metadata:
   version: 1.0.0
   resolution: "fs.realpath@npm:1.0.0"
   checksum: 99ddea01a7e75aa276c250a04eedeffe5662bce66c65c07164ad6264f9de18fb21be9433ead460e54cff20e31721c811f4fb5d70591799df5f85dce6d6746fd0
+  languageName: node
+  linkType: hard
+
+"fs@npm:^0.0.1-security":
+  version: 0.0.1-security
+  resolution: "fs@npm:0.0.1-security"
+  checksum: 53c6230e1faae9fa32c1df82c16a84b51b1243d20f3da2b64bd110bb472b73b9185169b703e008356e3cdc92d155088b617d9d39a63b5227a30b3621baad7f5d
   languageName: node
   linkType: hard
 
@@ -1434,6 +1496,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mz@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "mz@npm:2.7.0"
+  dependencies:
+    any-promise: ^1.0.0
+    object-assign: ^4.0.1
+    thenify-all: ^1.0.0
+  checksum: 8427de0ece99a07e9faed3c0c6778820d7543e3776f9a84d22cf0ec0a8eb65f6e9aee9c9d353ff9a105ff62d33a9463c6ca638974cc652ee8140cd1e35951c87
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:3.3.1":
   version: 3.3.1
   resolution: "nanoid@npm:3.3.1"
@@ -1522,6 +1595,13 @@ __metadata:
     gauge: ^4.0.3
     set-blocking: ^2.0.0
   checksum: ae238cd264a1c3f22091cdd9e2b106f684297d3c184f1146984ecbe18aaa86343953f26b9520dedd1b1372bc0316905b736c1932d778dbeb1fcf5a1001390e2a
+  languageName: node
+  linkType: hard
+
+"object-assign@npm:^4.0.1":
+  version: 4.1.1
+  resolution: "object-assign@npm:4.1.1"
+  checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
   languageName: node
   linkType: hard
 
@@ -1680,12 +1760,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
+    "@solana/spl-token": ^0.3.6
     "@solana/web3.js": ^1.72.0
     "@types/bn.js": ^5.1.0
     "@types/chai": ^4.3.0
     "@types/mocha": ^9.0.0
+    "@types/mz": ^2.7.2
+    buffer-layout: ^1.2.2
     chai: ^4.3.4
+    fs: ^0.0.1-security
     mocha: ^9.0.3
+    mz: ^2.7.0
     prettier: ^2.6.2
     ts-mocha: ^10.0.0
     typescript: ^4.3.5
@@ -1899,6 +1984,24 @@ __metadata:
   version: 1.0.2
   resolution: "text-encoding-utf-8@npm:1.0.2"
   checksum: ec4c15d50e738c5dba7327ad432ebf0725ec75d4d69c0bd55609254c5a3bc5341272d7003691084a0a73d60d981c8eb0e87603676fdb6f3fed60f4c9192309f9
+  languageName: node
+  linkType: hard
+
+"thenify-all@npm:^1.0.0":
+  version: 1.6.0
+  resolution: "thenify-all@npm:1.6.0"
+  dependencies:
+    thenify: ">= 3.1.0 < 4"
+  checksum: dba7cc8a23a154cdcb6acb7f51d61511c37a6b077ec5ab5da6e8b874272015937788402fd271fdfc5f187f8cb0948e38d0a42dcc89d554d731652ab458f5343e
+  languageName: node
+  linkType: hard
+
+"thenify@npm:>= 3.1.0 < 4":
+  version: 3.3.1
+  resolution: "thenify@npm:3.3.1"
+  dependencies:
+    any-promise: ^1.0.0
+  checksum: 84e1b804bfec49f3531215f17b4a6e50fd4397b5f7c1bccc427b9c656e1ecfb13ea79d899930184f78bc2f57285c54d9a50a590c8868f4f0cef5c1d9f898b05e
   languageName: node
   linkType: hard
 
