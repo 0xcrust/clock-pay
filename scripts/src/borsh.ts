@@ -1,4 +1,4 @@
-import { PublicKey } from '@solana/web3.js';
+import { Account, PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import * as borsh from 'borsh';
 
@@ -76,3 +76,53 @@ export function serializeStartPayArgs(
   );
   return args;
 }
+
+
+class AccountingState {
+  authority = PublicKey.default;
+  mint = PublicKey.default;
+  activeBeneficiaries = new BN(0);
+  vault = PublicKey.default;
+  balance = new BN(0);
+  bump = 0;
+  constructor(fields: {
+    authority: PublicKey, mint: PublicKey, activeBeneficiaries: BN, 
+    vault: PublicKey, balance: BN, bump: number
+  } | undefined = undefined) {
+    if (fields) {
+      this.authority = fields.authority;
+      this.mint = fields.mint;
+      this.activeBeneficiaries = fields.activeBeneficiaries,
+      this.vault = fields.vault;
+      this.balance = fields.balance;
+      this.bump = fields.bump;
+    }
+  }
+}
+
+const AccountingSchema = new Map([
+  [
+    AccountingState,
+    {
+      kind: 'struct',
+      fields: [
+        ['authority', '[32]'],
+        ['mint', '[32]'],
+        ['active_beneficiaries', 'u64'],
+        ['vault', '[32]'],
+        ['balance', 'u64'],
+        ['bump', 'u8']
+      ]
+    }
+  ]
+]);
+
+export function deserializeAccountingState(data: Buffer): AccountingState {
+  let state = borsh.deserialize(
+    AccountingSchema,
+    AccountingState,
+    data
+  );
+  return state;
+}
+
