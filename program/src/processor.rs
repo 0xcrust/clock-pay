@@ -82,17 +82,21 @@ impl Processor {
         if *token_program.key != TokenProgramId {
             return Err(ClockPayError::InvalidAccount.into());
         }
+        let associated_token_program = next_account_info(account_info_iter)?;
+        if *associated_token_program.key != AssociatedTokenProgramId {
+            return Err(ClockPayError::InvalidAccount.into());
+        }
 
-        msg!("Initialize accounting state account");
+        msg!("Initialize accounting state account.");
         if **accounting_state_account.try_borrow_lamports()? > 0 {
             return Err(ClockPayError::AccountAlreadyInitialized.into());
         }
-        let state_lamports = Rent::default().minimum_balance(Accounting::size());
+        let state_lamports = Rent::default().minimum_balance(Accounting::SIZE);
         let create_state_account_ix = solana_program::system_instruction::create_account(
             initializer.key,
             accounting_state_account.key,
             state_lamports,
-            Accounting::size() as u64,
+            Accounting::SIZE as u64,
             program_id,
         );
         let state_account_seeds = &[
@@ -126,11 +130,12 @@ impl Processor {
                 token_mint.clone(),
                 system_program.clone(),
                 token_program.clone(),
+                associated_token_program.clone(),
             ],
         )?;
-
+        
         let mut accounting_info =
-            Accounting::try_from_slice(&accounting_state_account.try_borrow_data()?)?;
+            Accounting::try_from_slice(&accounting_state_account.data.borrow())?;
         accounting_info.authority = *initializer.key;
         accounting_info.mint = *token_mint.key;
         accounting_info.active_beneficiaries = 0;
@@ -162,7 +167,7 @@ impl Processor {
             program_id,
         );
         let mut state_info =
-            Accounting::try_from_slice(&accounting_state_account.try_borrow_data()?)?;
+            Accounting::try_from_slice(&accounting_state_account.data.borrow())?;
         if state_pda != *accounting_state_account.key || state_bump != state_info.bump {
             return Err(ClockPayError::InvalidAccount.into());
         }

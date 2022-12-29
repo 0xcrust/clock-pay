@@ -11,9 +11,10 @@ pub enum ClockPayInstruction {
     /// 0. `[signer, writable]` The initializer.
     /// 1. `[]` Token mint
     /// 2. `[writable]` The program account that stores the state. A pda with seeds &[b"accounting".as_ref(), initializer.key.as_ref()]
-    /// 3. `[]` The vault: Associated token account for the state pda
+    /// 3. `[writable]` The vault: Associated token account for the state pda
     /// 4. `[]` The System Program
     /// 5. `[]` The Token Program
+    /// 6. `[]` The AToken Program
     InitAccounting,
     /// Deposits into the Accounting vault
     ///

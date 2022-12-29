@@ -12,9 +12,7 @@ pub struct Accounting {
 }
 
 impl Accounting {
-    pub fn size() -> usize {
-        std::mem::size_of::<Self>()
-    }
+    pub const SIZE: usize = 113;
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
@@ -32,7 +30,5 @@ pub struct Payroll {
 }
 
 impl Payroll {
-    pub fn size() -> usize {
-        std::mem::size_of::<Self>()
-    }
+    pub const SIZE: usize = 113;
 }
