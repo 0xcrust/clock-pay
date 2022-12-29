@@ -1,6 +1,7 @@
 import {Keypair, LAMPORTS_PER_SOL, Connection, PublicKey} from '@solana/web3.js';
 import fs from 'mz/fs';
 import path from 'path';
+import * as spl from '@solana/spl-token';
 import * as BufferLayout from "buffer-layout";
 import BN from 'bn.js';
 
@@ -47,3 +48,33 @@ export async function airdrop(
     signature: airdropSignature
   });
 }
+
+export async function createTokenMint(connection: Connection, mintAuthority: Keypair): Promise<[PublicKey, Keypair]> {
+  let mintAddress = await spl.createMint(
+    connection,
+    mintAuthority,
+    mintAuthority.publicKey,
+    null,
+    0
+  );
+  console.log(`Mint account created with address: ${mintAddress.toBase58()}`);
+
+  return [mintAddress, mintAuthority]
+}
+
+
+export const mintTokensToWallet = async(wallet: PublicKey, amount: number, feePayer: Keypair, 
+  mintAddress: PublicKey, mintAuthority: Keypair, connection: Connection) => {
+  let tx = await spl.mintToChecked(
+      connection,
+      feePayer,
+      mintAddress,
+      wallet,
+      mintAuthority,
+      amount * 1e0,
+      0
+  );
+
+  console.log(`Minted ${amount} tokens to ${wallet}`);
+}
+
