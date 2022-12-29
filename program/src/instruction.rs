@@ -1,10 +1,6 @@
-use solana_program::{
-    pubkey::Pubkey,
-    program_error::ProgramError
-};
-use borsh::BorshDeserialize;
 use crate::error::ClockPayError::InvalidInstruction;
-
+use borsh::BorshDeserialize;
+use solana_program::{program_error::ProgramError, pubkey::Pubkey};
 
 pub enum ClockPayInstruction {
     /// Initializes an accounting instance. Represents the user's global state.
@@ -14,11 +10,11 @@ pub enum ClockPayInstruction {
     ///
     /// 0. `[signer, writable]` The initializer.
     /// 1. `[]` Token mint
-    /// 2. `[writable]` The program account that stores the state. A pda with seeds &[b"account".as_ref(), initializer.key.as_ref()]
-    /// 4. `[]` The vault: Associated token account for the state pda
-    /// 5. `[]` The System Program
-    /// 6. `[]` The Token Program
-    InitAccounting{},
+    /// 2. `[writable]` The program account that stores the state. A pda with seeds &[b"accounting".as_ref(), initializer.key.as_ref()]
+    /// 3. `[]` The vault: Associated token account for the state pda
+    /// 4. `[]` The System Program
+    /// 5. `[]` The Token Program
+    InitAccounting,
     /// Deposits into the Accounting vault
     ///
     ///
@@ -34,7 +30,7 @@ pub enum ClockPayInstruction {
     ///
     ///
     /// Accounts expected
-    /// 
+    ///
     /// 1. `[signer]` The authority of the Accounting state instance.
     /// 2. `[writable]` The Accounting state account.
     /// 3. `[writable]` The vault to be withdrawn from.
@@ -45,17 +41,17 @@ pub enum ClockPayInstruction {
 }
 
 #[derive(BorshDeserialize, Debug)]
-struct DepositArgs {
-    amount: u64,
+pub struct DepositArgs {
+    pub amount: u64,
 }
 
 #[derive(BorshDeserialize, Debug)]
-struct StartPayArgs {
-    time_till_start: u64,
-    amount: u64,
-    cycles: u64,
-    interval: u64,
-    receiver_key: Pubkey,
+pub struct StartPayArgs {
+    pub time_till_start: u64,
+    pub amount: u64,
+    pub cycles: u64,
+    pub interval: u64,
+    pub receiver_key: Pubkey,
 }
 
 impl ClockPayInstruction {
@@ -71,7 +67,7 @@ impl ClockPayInstruction {
     }
 
     fn unpack_init_accounting_args() -> Result<Self, ProgramError> {
-        Ok(Self::InitAccounting{})
+        Ok(Self::InitAccounting {})
     }
 
     fn unpack_deposit_args(src: &[u8]) -> Result<Self, ProgramError> {
@@ -83,6 +79,4 @@ impl ClockPayInstruction {
         let unpacked_args = StartPayArgs::try_from_slice(&src)?;
         Ok(Self::NewPayroll(unpacked_args))
     }
-
-
 }
