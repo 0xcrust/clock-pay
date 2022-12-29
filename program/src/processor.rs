@@ -8,6 +8,12 @@ use crate::{
 };
 
 use crate::state::Allowance;
+use solana_program::{
+    account_info::AccountInfo,
+    msg,
+    pubkey::Pubkey,
+    entrypoint::ProgramResult,
+};
 
 pub struct Processor;
 impl Processor {
@@ -28,12 +34,12 @@ impl Processor {
     }
 
     fn process_init_allowance(
-        accounts: &[AccountInfo],
-        program_id: &Pubkey,
-        time_to_start: u64,
-        amount: u64,
-        cycles: u64,
-        interval: u64
+        _accounts: &[AccountInfo],
+        _program_id: &Pubkey,
+        _time_to_start: u64,
+        _amount: u64,
+        _cycles: u64,
+        _interval: u64
     ) -> ProgramResult {
         Ok(())
     }
