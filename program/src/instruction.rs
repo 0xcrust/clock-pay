@@ -9,13 +9,13 @@ pub enum ClockPayInstruction {
     ///
     /// Accounts expected:
     ///
-    /// 0. `[signer, writable]` The initializer's system account
-    /// 1. `[writable]` The program account that stores the state. A pda with seeds &[b"allowance".as_ref(), 
-    ///     initializer.key.as_ref(), receiver_token_account.key.as_ref()]
-    /// 2. `[]` Token mint
-    /// 3. `[writable]` Initializer token account
-    /// 4. `[writable]` Receiver token account
-    /// 5. `[]` The vault: A pda token account seeded from the state address. Seeds: &[b"vault".as_ref(), state.key.as_ref()]
+    /// 0. `[signer, writable]` The initializer's system account.
+    /// 1. `[writable]` The receiver's account.
+    /// 2. `[writable]` The program account that stores the state. A pda with seeds &[b"allowance".as_ref(), 
+    ///     initializer.key.as_ref(), receiver.key.as_ref()]
+    /// 3. `[]` Token mint
+    /// 4. `[writable]` Initializer token account.
+    /// 5. `[]` The vault: A pda token account seeded from the state address. seeds: &[b"vault".as_ref(), state.key.as_ref()]
     /// 6. `[]` The System Program
     /// 7. `[]` The Token Program
     InitAllowance(InitArgs),
