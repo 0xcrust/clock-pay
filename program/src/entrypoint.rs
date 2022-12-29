@@ -12,6 +12,5 @@ pub fn process_instruction(
     accounts: &[AccountInfo],
     instruction_data: &[u8]
 ) -> ProgramResult {
-    processor::Processor::process(program_id, accounts)
-    Ok(())
+    processor::Processor::process(program_id, accounts, instruction_data)
 }
