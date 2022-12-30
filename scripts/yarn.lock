@@ -1766,6 +1766,7 @@ __metadata:
     "@types/chai": ^4.3.0
     "@types/mocha": ^9.0.0
     "@types/mz": ^2.7.2
+    borsh: ^0.7.0
     buffer-layout: ^1.2.2
     chai: ^4.3.4
     fs: ^0.0.1-security

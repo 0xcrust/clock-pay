@@ -5,10 +5,9 @@ import {
   Transaction,
   TransactionInstruction,
   sendAndConfirmTransaction,
-  SystemProgram
+  SystemProgram,
 } from '@solana/web3.js';
 import {
-  getProviderKeypair,
   getProgramKeypair,
   airdrop,
   createTokenMint,
@@ -16,13 +15,13 @@ import {
 } from './utils';
 import {
   serializeDepositArgs,
-  serializeStartPayArgs
-
-} from './serde';
-import {assert, config, expect} from 'chai';
+  serializeStartPayArgs,
+  deserializeAccountingState,
+} from './borsh';
+import {assert} from 'chai';
 import BN from "bn.js";
 import * as spl from "@solana/spl-token";
-import { createInitializeNonTransferableMintInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+
 
 describe("crowdfunding", () => {
   const programKeypair: Keypair =  getProgramKeypair();
@@ -51,9 +50,9 @@ describe("crowdfunding", () => {
       [Buffer.from("accounting", "utf8"), initializer.publicKey.toBuffer()],
       programId
     );
-    console.log("accounting:",  accountingPDA);
+    console.log("accounting:",  accountingPDA.toString());
     vaultKey = await spl.getAssociatedTokenAddress(tokenX, accountingPDA, true);
-    console.log("vault: ", vaultKey);
+    console.log("vault: ", vaultKey.toString());
     
     const initAccountingTx = new TransactionInstruction({
       programId: programId,
@@ -100,8 +99,66 @@ describe("crowdfunding", () => {
     console.log("Sending initialize accounting transaction");
     await sendAndConfirmTransaction(connection, tx, [initializer]);
 
+    let accountingInfo = await connection.getAccountInfo(accountingPDA);
+    let deserializedInfo = deserializeAccountingState(accountingInfo.data);
 
-    
+    assert.ok(new PublicKey(deserializedInfo.authority).equals(initializer.publicKey));
+    assert.ok(new PublicKey(deserializedInfo.mint).equals(tokenX));
+    assert.equal(deserializedInfo.active_payrolls.toNumber(), 0);
+    assert.ok(new PublicKey(deserializedInfo.vault).equals(vaultKey));
+    assert.equal(deserializedInfo.balance.toNumber(), 0);
+    assert.equal(deserializedInfo.bump, accountingBump);
+
+    let initializerTokenAccount = await spl.createAssociatedTokenAccount(
+      connection, initializer, tokenX, initializer.publicKey);
+
+    await mintTokensToWallet(initializerTokenAccount, 500, mintAuthority, tokenX, mintAuthority, connection);
+
+    let depositAmount = new BN(400);
+    let encodedArgs = serializeDepositArgs(depositAmount);
+    let instructionData = Buffer.from([1]);
+    instructionData = Buffer.concat([instructionData, Buffer.from(encodedArgs)]);
+
+    let depositInstruction = new TransactionInstruction({
+      programId: programId,
+      keys: [
+        {
+          pubkey: initializer.publicKey,
+          isSigner: true,
+          isWritable: false
+        },
+        {
+          pubkey: accountingPDA,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: initializerTokenAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: vaultKey,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: spl.TOKEN_PROGRAM_ID,
+          isSigner: false,
+          isWritable: false,
+        }
+      ],
+      data: instructionData
+    });
+
+    tx = new Transaction().add(depositInstruction);
+    console.log("Sending instruction to deposit into vault");
+    await sendAndConfirmTransaction(connection, tx, [initializer]);
+
+    let vaultInfo = await spl.getAccount(connection, vaultKey);
+    let amount = Number(vaultInfo.amount);
+    console.log("amount: ", amount);
+    assert.equal(amount, 400);
   });
 });
 
