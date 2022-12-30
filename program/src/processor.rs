@@ -138,7 +138,7 @@ impl Processor {
             Accounting::try_from_slice(&accounting_state_account.data.borrow())?;
         accounting_info.authority = *initializer.key;
         accounting_info.mint = *token_mint.key;
-        accounting_info.active_beneficiaries = 0;
+        accounting_info.active_payrolls = 0;
         accounting_info.vault = *vault_account.key;
         accounting_info.balance = 0;
         accounting_info.bump = state_bump;

@@ -5,7 +5,7 @@ use solana_program::pubkey::Pubkey;
 pub struct Accounting {
     pub authority: Pubkey,
     pub mint: Pubkey,
-    pub active_beneficiaries: u64,
+    pub active_payrolls: u64,
     pub vault: Pubkey,
     pub balance: u64,
     pub bump: u8,
