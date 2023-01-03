@@ -77,10 +77,6 @@ pub struct NewPayrollArgs {
     pub schedule: [u8; 30],
 }
 
-/*
-#[derive(BorshSerialize, BorshDeserialize)]
-pub struct PaymentArgs {
-}*/
 
 impl ClockPayInstruction {
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
