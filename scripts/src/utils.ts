@@ -34,10 +34,10 @@ export function createKeypairFromFile(
 
 export async function airdrop(
   connection: Connection, 
-  destinationWallet: Keypair, 
+  destinationWallet: PublicKey, 
   amount: number
 ) {
-  const airdropSignature = await connection.requestAirdrop(destinationWallet.publicKey, 
+  const airdropSignature = await connection.requestAirdrop(destinationWallet, 
     amount * LAMPORTS_PER_SOL);
 
   const latestBlockHash = await connection.getLatestBlockhash();
