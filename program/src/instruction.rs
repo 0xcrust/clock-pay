@@ -1,6 +1,6 @@
 use crate::error::ClockPayError::InvalidInstruction;
 use borsh::BorshDeserialize;
-use solana_program::{program_error::ProgramError, pubkey::Pubkey};
+use solana_program::program_error::ProgramError;
 
 pub enum ClockPayInstruction {
     /// Initializes an accounting instance. Represents the user's global state.
@@ -27,18 +27,42 @@ pub enum ClockPayInstruction {
     /// 3. `[writable]` The vault
     /// 4. `[]` The Token Program,
     Deposit(DepositArgs),
-    /// Adds a beneficiary to the payroll
+    /// Initializes a new payroll
     ///
     ///
     /// Accounts expected
     ///
     /// 1. `[signer]` The authority of the Accounting state instance.
     /// 2. `[writable]` The Accounting state account.
-    /// 3. `[writable]` The vault to be withdrawn from.
-    /// 4. `[writable]` The receiver's token account.
+    /// 3. `[writable]` The payroll account to be created. A pda with seeds [b"payroll".as_ref(), accounting.key.as_ref(), receiver.key.as_ref()]
+    /// 4. `[]` The receiver's key
+    /// 5. `[]` The System Program,
+    NewPayroll(NewPayrollArgs),
+    /// Initializes the clockwork instance to pay iteratively
+    ///
+    ///
+    /// Accounts expected:
+    ///
+    /// 1. `[writable, signer]` The authority.
+    /// 2. `[writable]` The accounting state pda. Acts as a signer
+    /// 3. `[writable]` The payroll state pda
+    /// 4. `[writable]` The vault
+    /// 5. `[writable]` The receiver's wallet
+    /// 6. `[writable]` The Thread
+    /// 7. `[]` The Thread program
+    /// 8. `[]` The Token Program
+    /// 9. `[]` The System Program
+    InitPayment,
+    /// Automated by clockwork from inside the make payment instruction
+    ///
+    /// Accounts expected:
+    ///
+    /// 1. `[writable]` The payroll state.
+    /// 2. `[writable]` The accounting state.
+    /// 3. `[writable]` The vault to be withdrawn from
+    /// 4. `[writable]` The receiver's wallet
     /// 5. `[]` The token program
-    /// 6. `[]` Clockwork(I haven't figured this out yet)
-    NewPayroll(StartPayArgs),
+    Pay,
 }
 
 #[derive(BorshDeserialize, Debug)]
@@ -47,13 +71,16 @@ pub struct DepositArgs {
 }
 
 #[derive(BorshDeserialize, Debug)]
-pub struct StartPayArgs {
-    pub time_till_start: u64,
+pub struct NewPayrollArgs {
     pub amount: u64,
     pub cycles: u64,
-    pub interval: u64,
-    pub receiver_key: Pubkey,
+    pub schedule: [u8; 30],
 }
+
+/*
+#[derive(BorshSerialize, BorshDeserialize)]
+pub struct PaymentArgs {
+}*/
 
 impl ClockPayInstruction {
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
@@ -63,12 +90,14 @@ impl ClockPayInstruction {
             0 => Self::unpack_init_accounting_args()?,
             1 => Self::unpack_deposit_args(rest)?,
             2 => Self::unpack_new_payroll_args(rest)?,
+            3 => Self::unpack_init_payment_args()?,
+            4 => Self::unpack_pay_args()?,
             _ => return Err(InvalidInstruction.into()),
         })
     }
 
     fn unpack_init_accounting_args() -> Result<Self, ProgramError> {
-        Ok(Self::InitAccounting {})
+        Ok(Self::InitAccounting)
     }
 
     fn unpack_deposit_args(src: &[u8]) -> Result<Self, ProgramError> {
@@ -77,7 +106,15 @@ impl ClockPayInstruction {
     }
 
     fn unpack_new_payroll_args(src: &[u8]) -> Result<Self, ProgramError> {
-        let unpacked_args = StartPayArgs::try_from_slice(&src)?;
+        let unpacked_args = NewPayrollArgs::try_from_slice(&src)?;
         Ok(Self::NewPayroll(unpacked_args))
+    }
+
+    fn unpack_init_payment_args() -> Result<Self, ProgramError> {
+        Ok(Self::InitPayment)
+    }
+
+    fn unpack_pay_args() -> Result<Self, ProgramError> {
+        Ok(Self::Pay)
     }
 }

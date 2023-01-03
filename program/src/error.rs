@@ -16,6 +16,10 @@ pub enum ClockPayError {
     WrongMint,
     #[error("Wrong authority for this instruction")]
     WrongAuthority,
+    #[error("Exceeded schedule length")]
+    ScheduleLengthExceeded,
+    #[error("Receiver's payment cycles completed")]
+    TriedExceedingPaymentLimit,
 }
 
 impl From<ClockPayError> for ProgramError {
