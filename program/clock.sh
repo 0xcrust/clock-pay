@@ -2,7 +2,7 @@
 
 function start() {
   rm -r test-ledger
-  clockwork localnet --bpf-program $HOME/source/projects/pay/program/target/deploy/program-keypair.json $HOME/source/projects/pay/program/target/deploy/program.so
+  clockwork localnet --bpf-program $HOME/source/projects/clockpay/program/target/deploy/program-keypair.json $HOME/source/projects/clockpay/program/target/deploy/program.so
 }
 
 start
