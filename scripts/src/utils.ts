@@ -2,8 +2,6 @@ import {Keypair, LAMPORTS_PER_SOL, Connection, PublicKey} from '@solana/web3.js'
 import fs from 'mz/fs';
 import path from 'path';
 import * as spl from '@solana/spl-token';
-import * as BufferLayout from "buffer-layout";
-import BN from 'bn.js';
 
 const PROVIDER_KEYPAIR_PATH = "/home/ademola/.config/solana/id.json";
 const PROGRAM_KEYPAIR_PATH = path.resolve(__dirname, '../../program/target/deploy/program-keypair.json');
