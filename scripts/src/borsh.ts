@@ -26,52 +26,45 @@ export function serializeDepositArgs(amount: BN): Uint8Array {
 }
 
 
-class StartPayArgs {
-  timeTillStart = new BN(0);
+class NewPayrollArgs {
   amount = new BN(0);
   cycles = new BN(0);
-  interval = new BN(0);
-  receiverKey = PublicKey.default;
-  constructor (fields: {
-    timeTillStart: BN, amount: BN, cycles: BN, interval: BN, 
-    receiverKey: PublicKey} | undefined = undefined) {
+  schedule = Buffer.from("", "utf8");
+  constructor (fields: {amount: BN, cycles: BN, schedule: Buffer} 
+    | undefined = undefined) {
       if (fields) {
-        this.timeTillStart = fields.timeTillStart;
         this.amount = fields.amount;
         this.cycles = fields.cycles;
-        this.interval = fields.interval;
-        this.receiverKey = fields.receiverKey;
+        this.schedule = fields.schedule;
       }
     }
 }
 
-const StartPaySchema = new Map([
+const NewPayrollSchema = new Map([
   [
-    StartPayArgs, 
+    NewPayrollArgs, 
     {
       kind: 'struct', 
       fields: [
-        ['time_till_start', 'u64'],
         ['amount', 'u64'],
         ['cycles', 'u64'],
-        ['interval', 'u64'],
-        ['receiver_key', [32]]
+        ['schedule', [30]],
       ]
     }
   ]
 ]);
 
-export function serializeStartPayArgs(
-  time: BN, amount: BN, cycles: BN, interval: BN, receiverKey: PublicKey
-): Uint8Array {
+export function serializeNewPayrollArgs(
+  amount: BN, cycles: BN, schedule: string): Uint8Array {
+  let bytes = Buffer.alloc(30);
+  bytes.write(schedule, "utf8");
+
   const args = borsh.serialize(
-    StartPaySchema,
-    new StartPayArgs({
-      timeTillStart: time,
+    NewPayrollSchema,
+    new NewPayrollArgs({
       amount: amount,
       cycles: cycles,
-      interval: interval,
-      receiverKey: receiverKey,
+      schedule: bytes,
     }),
   );
   return args;
@@ -81,20 +74,22 @@ export function serializeStartPayArgs(
 export class AccountingState {
   authority = PublicKey.default;
   mint = PublicKey.default;
-  active_payrolls = new BN(0);
+  activePayrolls = new BN(0);
   vault = PublicKey.default;
   balance = new BN(0);
+  active = false;
   bump = 0;
   constructor(fields: {
-    authority: PublicKey, mint: PublicKey, active_payrolls: BN, 
-    vault: PublicKey, balance: BN, bump: number
+    authority: Uint8Array, mint: Uint8Array, active_payrolls: BN, 
+    vault: Uint8Array, balance: BN, active: boolean, bump: number
   } | undefined = undefined) {
     if (fields) {
-      this.authority = fields.authority;
-      this.mint = fields.mint;
-      this.active_payrolls = fields.active_payrolls,
-      this.vault = fields.vault;
+      this.authority = new PublicKey(fields.authority);
+      this.mint = new PublicKey(fields.mint);
+      this.activePayrolls = fields.active_payrolls,
+      this.vault = new PublicKey(fields.vault);
       this.balance = fields.balance;
+      this.active = fields.active;
       this.bump = fields.bump;
     }
   }
@@ -111,7 +106,8 @@ export const AccountingSchema = new Map([
         ['active_payrolls', 'u64'],
         ['vault', [32]],
         ['balance', 'u64'],
-        ['bump', 'u8']
+        ['active', 'u8'],
+        ['bump', 'u8'],
       ]
     }
   ]
@@ -126,3 +122,66 @@ export function deserializeAccountingState(data: Buffer): AccountingState {
   return state;
 }
 
+
+export class PayRoll {
+  accounting = PublicKey.default;
+  active = false;
+  amount = new BN(0);
+  totalAmountDisbursed = new BN(0);
+  cronSchedule = "";
+  receiver = PublicKey.default;
+  maxCycles = new BN(0);
+  cyclesCompleted = new BN(0);
+  thread = PublicKey.default;
+  bump = 0;
+  constructor(fields: {
+    accounting: Uint8Array, active: boolean, amount: BN, total_amount_disbursed: BN,
+    cron_schedule: Uint8Array, receiver: Uint8Array, max_cycles: BN, cycles_completed: BN, 
+    thread: Uint8Array, bump: number} | undefined = undefined) 
+  {
+    if(fields) {
+      let schedule = fields.cron_schedule.filter(x => x != 0);
+
+      this.accounting = new PublicKey(fields.accounting);
+      this.active = fields.active;
+      this.amount = fields.amount;
+      this.totalAmountDisbursed = fields.total_amount_disbursed;
+      this.cronSchedule = new TextDecoder().decode(schedule),
+      this.receiver = new PublicKey(fields.receiver);
+      this.maxCycles = fields.max_cycles;
+      this.cyclesCompleted = fields.cycles_completed;
+      this.thread = new PublicKey(fields.thread);
+      this.bump = fields.bump;
+    }
+  }
+}
+
+export const PayrollSchema = new Map([
+  [
+    PayRoll,
+    {
+      kind: 'struct',
+      fields: [
+        ['accounting', [32]],
+        ['active', 'u8'],
+        ['amount', 'u64'],
+        ['total_amount_disbursed', 'u64'],
+        ['cron_schedule', [30]],
+        ['receiver', [32]],
+        ['max_cycles', 'u64'],
+        ['cycles_completed', 'u64'],
+        ['thread', [32]],
+        ['bump', 'u8'],
+      ]
+    }
+  ]
+]);
+
+export function deserializePayrollState(data: Buffer): PayRoll {
+  let state = borsh.deserialize(
+    PayrollSchema,
+    PayRoll,
+    data
+  );
+  return state;
+}
