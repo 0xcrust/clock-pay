@@ -1,6 +1,6 @@
 Using [@clockwork-xyz](https://github.com/clockwork-xyz) to build an automated payment system for a company's accounting department. 
 
-I built clockpay as a Solana Rust program(rather than Anchor) not because it's the most optimal way to do so, but for fun and the sake of experimentation. Kindly check out https://github.com/clockwork-xyz/examples for more idiomatic usage of clockwork with the Anchor framework.
+I built clockpay as a Solana Rust program(rather than Anchor) not because it's the most optimal way to do so, but for fun and the sake of experimentation. Kindly check out https://github.com/clockwork-xyz/examples for idiomatic usage of clockwork with the Anchor framework.
 
 ## Installations
 - [Rust](https://www.rust-lang.org/tools/install)
