@@ -1,4 +1,6 @@
-Using @clockwork-xyz to build an automated payment system for a company's accounting Department. Please note that I built clockpay as a Solana Rust program(rather than Anchor) not because it's the most optimal way to do so, but for fun and the sake of experimentation. Check https://github.com/clockwork-xyz/clockwork-examples for more idiomatic uses of clockwork with the Anchor framework.
+Using [@clockwork-xyz](https://github.com/clockwork-xyz) to build an automated payment system for a company's accounting department. 
+
+I built clockpay as a Solana Rust program(rather than Anchor) not because it's the most optimal way to do so, but for fun and the sake of experimentation. Please check https://github.com/clockwork-xyz/examples for more idiomatic uses of clockwork with the Anchor framework.
 
 ## Installations
 - [Rust](https://www.rust-lang.org/tools/install)
@@ -23,7 +25,7 @@ Deploy the contract to the `clockwork localnet` by following these steps on your
 #### Testing
 - Navigate into the `/scripts` directory,
 - Run `yarn install` to install dependencies,
-- `yarn run test` to run the tests.
+- Run `yarn run test`.
 
 
 
