@@ -3,7 +3,7 @@ Using [@clockwork-xyz](https://github.com/clockwork-xyz) to build an automated p
 I built clockpay as a Solana Rust program(rather than Anchor) not because it's the most optimal way to do so, but for fun and the sake of experimentation. Kindly check out https://github.com/clockwork-xyz/examples for idiomatic usage of clockwork with the Anchor framework.
 
 - [program](https://github.com/0xcrust/clockPay/tree/main/program) contains the main source code for the project.
-- [clock_anchor](https://github.com/0xcrust/clockPay/tree/main/clock_anchor) is code I wrote to learn how clockwork works.
+- [clocktest](https://github.com/0xcrust/clockPay/tree/main/clock_anchor) is code I wrote to learn how clockwork works.
 - [scripts](https://github.com/0xcrust/clockPay/tree/main/scripts) contains the typescript client code for the contract.
 
 ## Installations
